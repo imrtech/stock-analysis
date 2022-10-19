@@ -148,10 +148,10 @@ Here is the code after refactoring:
       
       Next I
  
-    endTime = Timer
-    MsgBox "This code ran in " & (endTime - startTime) & " seconds for the year " & (yearValue)
+    	endTime = Timer
+    	MsgBox "This code ran in " & (endTime - startTime) & " seconds for the year " & (yearValue)
 
-End Sub
+  End Sub
 
 
 I ran the code and as you can see it only tool .32 seconds to run the 2018 data. 
