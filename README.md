@@ -32,11 +32,11 @@ This would query either worksheet based on the year entered.
 The headers in the All Stock Analysis worksheet was labeled with the following:
 
 'Create a header row
-    `Cells(3, 1).Value = "Ticker"
+    Cells(3, 1).Value = "Ticker"
      Cells(3, 2).Value = "Total Daily Volume"
      Cells(3, 3).Value = "Return"
 
-    'Initialize array of all tickers
+'Initialize array of all tickers
     Dim tickers(12) As String
     
     tickers(0) = "AY"
@@ -56,11 +56,11 @@ The headers in the All Stock Analysis worksheet was labeled with the following:
     `Worksheets(yearValue).Activate`
     
     'Get the number of rows to loop over
-     RowCount = Cells(Rows.Count, "A").End(xlUp).Row`
+     RowCount = Cells(Rows.Count, "A").End(xlUp).Row
 
 The first image was taken of the code run before refactoring. As you can see it took approximately 1.8 seconds to run data for 2018.
 
--  ![This is an image](/resources/2018AllStocksAnalysis.png)
+ ![This is an image](/resources/2018AllStocksAnalysis.png)
 
 ### Analysis after Refactoring
 
@@ -68,73 +68,73 @@ A VBS script file was provided and we needed to use it to refactor our VBA code.
 
 Here is the code after refactoring:
 
-  ''1a) Create a ticker Index
-    `tickerIndex = 0`
+  '1a) Create a ticker Index
+    tickerIndex = 0
 
-  ''1b) Create three output arrays
-    `Dim tickerVolumes(12) As Long`
-    `Dim tickerStartingPrices(12) As Single`
-    `Dim tickerEndingPrices(12) As Single`
+  '1b) Create three output arrays
+     Dim tickerVolumes(12) As Long
+     Dim tickerStartingPrices(12) As Single
+     Dim tickerEndingPrices(12) As Single
     
- ''2a) Create a for loop to initialize the tickerVolumes to zero.
-    `For I = 0 To 11
+ '2a) Create a for loop to initialize the tickerVolumes to zero.
+      For I = 0 To 11
         tickerVolumes(I) = 0
     
-    Next I`
+    Next I
         
- ''2b) Loop over all the rows in the spreadsheet.
-    `For I = 2 To RowCount`
+ '2b) Loop over all the rows in the spreadsheet.
+      For I = 2 To RowCount`
             
-  ''3a) Increase volume for current ticker
-        `tickerVolumes(tickerIndex) = tickerVolumes(tickerIndex) + Cells(I, 8).Value`
+  '3a) Increase volume for current ticker
+        tickerVolumes(tickerIndex) = tickerVolumes(tickerIndex) + Cells(I, 8).Value
         
    
-  ''3b) Check if the current row is the first row with the selected tickerIndex.
-         `If Cells(I - 1, 1).Value <> tickers(tickerIndex) And Cells(I, 1).Value = tickers(tickerIndex) Then
+  '3b) Check if the current row is the first row with the selected tickerIndex.
+        If Cells(I - 1, 1).Value <> tickers(tickerIndex) And Cells(I, 1).Value = tickers(tickerIndex) Then
                 tickerStartingPrices(tickerIndex) = Cells(I, 6).Value
-        `End If`
+        End If`
          
                    
-  ''3c) Check if the current row is the last row with the selected ticker
+  '3c) Check if the current row is the last row with the selected ticker
          'If the next Row's ticker doesn't match, increase the tickerIndex.
         
-	   `If Cells(I + 1, 1).Value <> tickers(tickerIndex) And Cells(I, 1).Value = tickers(tickerIndex) Then
+	   If Cells(I + 1, 1).Value <> tickers(tickerIndex) And Cells(I, 1).Value = tickers(tickerIndex) Then
                  tickerEndingPrices(tickerIndex) = Cells(I, 6).Value
     
-        End If`
+        End If
         
-  ''3d) Increase the tickerIndex.
-        `If Cells(I + 1, 1).Value <> tickers(tickerIndex) And Cells(I, 1).Value = tickers(tickerIndex) Then
-                tickerIndex = tickerIndex + 1`
+  '3d) Increase the tickerIndex.
+        If Cells(I + 1, 1).Value <> tickers(tickerIndex) And Cells(I, 1).Value = tickers(tickerIndex) Then
+                tickerIndex = tickerIndex + 1
         
 	  End If
              
     
-        Next I`
+        Next I
          
     
-    ''4) Loop through your arrays to output the Ticker, Total Daily Volume, and Return.
-    `For I = 0 To 11
+  '4) Loop through your arrays to output the Ticker, Total Daily Volume, and Return.
+      For I = 0 To 11
         
         Worksheets("All Stocks Analysis").Activate
         Cells(4 + I, 1).Value = tickers(I)
         Cells(4 + I, 2).Value = tickerVolumes(I)
-        Cells(4 + I, 3).Value = tickerEndingPrices(I) / tickerStartingPrices(I) - 1`
+        Cells(4 + I, 3).Value = tickerEndingPrices(I) / tickerStartingPrices(I) - 1
       
     Next I
     
     Formatting
-    `Worksheets("All Stocks Analysis").Activate
-    `Range("A3:C3").Font.FontStyle = "Bold"
-    `Range("A3:C3").Borders(xlEdgeBottom).LineStyle = xlContinuous
-    `Range("B4:B15").NumberFormat = "#,##0"
-    `Range("C4:C15").NumberFormat = "0.0%"
-    `Columns("B").AutoFi`
+     Worksheets("All Stocks Analysis").Activate
+     Range("A3:C3").Font.FontStyle = "Bold"
+     Range("A3:C3").Borders(xlEdgeBottom).LineStyle = xlContinuous
+     Range("B4:B15").NumberFormat = "#,##0"
+     Range("C4:C15").NumberFormat = "0.0%"
+     Columns("B").AutoFi
 
     dataRowStart = 4
     dataRowEnd = 15
 
-   For I = dataRowStart To dataRowEnd`
+   For I = dataRowStart To dataRowEnd
        
         If Cells(I, 3) > 0 Then
             
@@ -151,12 +151,12 @@ Here is the code after refactoring:
     endTime = Timer
     MsgBox "This code ran in " & (endTime - startTime) & " seconds for the year " & (yearValue)
 
-End Sub`
+End Sub
 
 
 I ran the code and as you can see it only tool .32 seconds to run the 2018 data. 
 
--  ![This is an image](resources/Refactor2018AllStocksAnalysis.png)
+  ![This is an image](resources/Refactor2018AllStocksAnalysis.png)
 
 ### Analysis of Stocks
 
